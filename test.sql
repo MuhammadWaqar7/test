@@ -52,7 +52,35 @@ WHERE p.Price = (
 )
 ORDER BY c.CategoryID, p.Price DESC;
 
-
+---Ans#5
+select c.Name as customer_name,so.OrderID,p.Name as product_name,ct.Name as category_name,pdo.Quantity,s.Name as supplier_name
+from dbo.Customer c
+join
+dbo.SalesOrder so
+on c.CustomerID=so.CustomerID
+join
+dbo.SalesOrderDetail sd
+on
+so.OrderID=sd.OrderID
+join
+dbo.Product p
+on
+sd.ProductID=p.ProductID
+JOIN
+dbo.Category ct
+on
+ct.CategoryID=p.CategoryID
+join
+dbo.PurchaseOrderDetail pdo
+on
+pdo.ProductID=p.ProductID
+join
+dbo.PurchaseOrder po
+on
+po.OrderID=	pdo.OrderID
+join
+dbo.Supplier s
+on s.SupplierID=po.SupplierID;
 
 
 
