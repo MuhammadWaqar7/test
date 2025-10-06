@@ -36,6 +36,21 @@ WHERE R.ReturnID IS NULL
 GROUP BY p.ProductID, p.Name
 HAVING SUM(o.Quantity) > 0;
 
+---Ans#4
+
+SELECT 
+    c.CategoryID,
+    c.Name as category_name,
+    p.Name as product_name,
+    p.Price
+FROM dbo.Category c
+JOIN dbo.Product p ON c.CategoryID = p.CategoryID
+WHERE p.Price = (
+    SELECT MAX(Price)
+    FROM dbo.Product p2
+    WHERE p2.CategoryID = c.CategoryID
+)
+ORDER BY c.CategoryID, p.Price DESC;
 
 
 
