@@ -23,7 +23,18 @@ group by  s.Name,
 			s.SupplierID
 			;
 
-
+---Ans#3
+SELECT 
+    p.ProductID,
+    p.Name,
+    SUM(o.Quantity) as totalorderquantity
+FROM dbo.product p
+JOIN SalesOrderDetail o ON p.ProductID = o.ProductID
+LEFT JOIN dbo.ReturnDetail d ON p.ProductID = d.ProductID
+LEFT JOIN dbo.Returns R ON d.ReturnID = R.ReturnID
+WHERE R.ReturnID IS NULL
+GROUP BY p.ProductID, p.Name
+HAVING SUM(o.Quantity) > 0;
 
 
 
