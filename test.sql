@@ -170,6 +170,39 @@ JOIN dbo.SalesOrder so ON sod.OrderID = so.OrderID
 JOIN DBO.Payment py on so.OrderID=py.orderid
 ORDER BY p.ProductID, so.OrderDate;
 
+-- Q9. Create a view named vw_CustomerOrderSummary that shows for each customer:
+-- CustomerID, CustomerName, TotalOrders, TotalAmountSpent, and LastOrderDate.
+--- Ans#9
+CREATE VIEW vw_CustomerOrderSummary AS
+SELECT 
+    c.CustomerID,
+    c.Name AS CustomerName,
+    COUNT(DISTINCT so.OrderID) AS TotalOrders,
+    SUM(sod.Quantity * sod.UnitPrice) AS TotalAmountSpent,
+    MAX(so.OrderDate) AS LastOrderDate
+FROM dbo.Customer c
+LEFT JOIN dbo.SalesOrder so ON c.CustomerID = so.CustomerID
+LEFT JOIN dbo.SalesOrderDetail sod ON so.OrderID = sod.OrderID
+GROUP BY c.CustomerID, c.Name;
+
+-- Q10. Write a stored procedure sp_GetSupplierSales that takes a SupplierID as input and returns the total sales amount for all products supplied by that supplier.
+
+--Ans#10
+
+CREATE PROCEDURE sp_GetSupplierPurchases
+    @SupplierID INT
+AS
+BEGIN
+    SELECT 
+        s.SupplierID,
+        s.Name AS SupplierName,
+        SUM(pod.Quantity * pod.UnitPrice) AS TotalPurchaseAmount
+    FROM dbo.Supplier s
+    JOIN dbo.PurchaseOrder po ON s.SupplierID = po.SupplierID
+    JOIN dbo.PurchaseOrderDetail pod ON po.OrderID = pod.OrderID
+    WHERE s.SupplierID = @SupplierID
+    GROUP BY s.SupplierID, s.Name;
+END;
 
 
 
